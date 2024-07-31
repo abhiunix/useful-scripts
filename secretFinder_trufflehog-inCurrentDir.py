@@ -1,17 +1,24 @@
-import os
 import subprocess
+import os
+from time import sleep
 from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
-# Load environment variables
 load_dotenv()
 slack_token = os.getenv("slack_token")
 channel_id = os.getenv("channel_id")
 
-# Change to the script directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_dir)
+
+def run_trufflehog(output_file):
+    try:
+        result = subprocess.run(['trufflehog', 'filesystem', '.'], capture_output=True, text=True)
+        with open(output_file, 'w') as f:
+            f.write(result.stdout)
+    except Exception as e:
+        print(f"Error running truffleHog: {e}")
 
 def scan_file(file_path, output_file):
     try:
@@ -29,17 +36,15 @@ def scan_directory(directory, output_file):
             file_path = os.path.join(root, file)
             scan_file(file_path, output_file)
 
-def upload_to_slack(file_path, channel_id, slack_token):
+def upload_to_slack(file_path, channel_id, slack_token, title, comment):
     client = WebClient(token=slack_token)
     try:
-        
-        # Open the file in binary mode for uploading
         with open(file_path, 'rb') as file_content:
             response = client.files_upload_v2(
                 channel=channel_id,
                 file=file_content,
-                title="SecretFinder Results",
-                initial_comment="Here are the results from the SecretFinder scan."
+                title=title,
+                initial_comment=comment
             )
         print(f"File uploaded successfully: {response['file']['name']}")
     except SlackApiError as e:
@@ -50,14 +55,16 @@ def upload_to_slack(file_path, channel_id, slack_token):
 
 if __name__ == "__main__":
     current_directory = os.getcwd()
-    output_file = 'secretFinder_results.txt'
-    # output_file = 'secretFinder_results.txt'
+    secretfinder_output_file = 'secretFinder_results.txt'
+    trufflehog_output_file = 'truffleHog_results.txt'
     
-    # Clear the output file before starting the scan
-    open(output_file, 'w').close()
+    open(secretfinder_output_file, 'w').close()
+    open(trufflehog_output_file, 'w').close()
     
-    # # # Run the directory scan
-    scan_directory(current_directory, output_file)
+    run_trufflehog(trufflehog_output_file)
     
-    # Upload the results to Slack
-    upload_to_slack(output_file, channel_id, slack_token)
+    scan_directory(current_directory, secretfinder_output_file)
+    
+    upload_to_slack(trufflehog_output_file, channel_id, slack_token, "TruffleHog Results", "Here are the results from the TruffleHog scan.")
+
+    upload_to_slack(secretfinder_output_file, channel_id, slack_token, "SecretFinder Results", "Here are the results from the SecretFinder scan.")

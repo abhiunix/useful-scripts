@@ -49,3 +49,4 @@ if __name__ == "__main__":
 
 #Usage:
 # python3 extract_params.py
+# It will extract the possible keywords from all the files and folders from the current directory.

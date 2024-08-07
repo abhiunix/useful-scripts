@@ -76,7 +76,7 @@ def clean_keywords_file(filepath):
     with open(filepath, "r") as file:
         keywords = file.readlines()
     
-    cleaned_keywords = [keyword.strip().replace('`', '') for keyword in keywords]
+    cleaned_keywords = sorted(set(keyword.strip().replace('`', '') for keyword in keywords))
 
     with open(filepath, "w") as file:
         for keyword in cleaned_keywords:
@@ -86,8 +86,10 @@ def main():
     codebase_directory = "."  # Current directory
     params = search_directory_for_keywords(codebase_directory)
     
+    unique_sorted_params = sorted(set(params))
+    
     with open("extracted_keywords.txt", "w") as output_file:
-        for param in sorted(params):
+        for param in unique_sorted_params:
             output_file.write(f"{param}\n")
     
     clean_keywords_file("extracted_keywords.txt")
@@ -96,7 +98,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 #Usage:
 # python3 extract_params.py

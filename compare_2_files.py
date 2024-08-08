@@ -34,4 +34,4 @@ if __name__ == "__main__":
 
 
 #Usage:
-# python compare_keywords.py out2.txt output.txt
+# python3 compare_2_files.py out2.txt output.txt

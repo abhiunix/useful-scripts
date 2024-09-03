@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import argparse
 
 def read_keywords_from_file(filename):

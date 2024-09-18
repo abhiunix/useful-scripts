@@ -87,3 +87,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+#Usage:
+# python3 response_extractor_from_warc.py CC-MAIN-xyz-xyz-00729.warc.gz --target_uri https://www.xyz.com/unisex/xyz

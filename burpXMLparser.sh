@@ -9,12 +9,6 @@ echo "requests-from-extractedxml File exists."
     mkdir requests-from-extractedxml 
 fi
 
-if [ -e ./sqlmapLogs/ ]; then 
-echo "sqlmapLogs File exists."
-    else
-    mkdir sqlmapLogs 
-fi
-
 counter=1
 
 for i in `cat $file`

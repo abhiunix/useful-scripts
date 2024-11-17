@@ -35,4 +35,6 @@ do
     let counter++
 done
 
+#Usage: bash burpXMLparser.sh burpSavedFileinXML.xml
+
 rm allRequestsInBase64.txt

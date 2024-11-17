@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat extracted.xml | grep "<request base64=" | awk -F'[' '{print $3}' | awk -F']]' '{print $1}' | tee allRequestsInBase64.txt >/dev/null
+cat $1 | grep "<request base64=" | awk -F'[' '{print $3}' | awk -F']]' '{print $1}' | tee allRequestsInBase64.txt >/dev/null
 
 file=allRequestsInBase64.txt
 if [ -e ./requests-from-extractedxml/ ]; then 

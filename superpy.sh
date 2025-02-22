@@ -1,6 +1,6 @@
 #!/bin/bash
 #Author: abhiunix
-#python venv problem solver
+#make python venv easiest than ever!
 
 
 # Define the installation path
@@ -55,8 +55,11 @@ VENV_PATH="\$PWD/\$VENV_NAME"
 
 # Check if the virtual environment already exists
 if [ ! -d "\$VENV_PATH/bin" ]; then
-    echo "Creating new virtual environment: \$VENV_NAME"
+    >&2 echo "Creating new virtual environment: \$VENV_NAME"
     python3 -m venv "\$VENV_NAME"
+else
+    # Print to stderr so it doesn't get "eval"-ed
+    >&2 echo "Switching to existing virtual environment: \$VENV_NAME"
 fi
 
 # Print the command to activate the virtual environment

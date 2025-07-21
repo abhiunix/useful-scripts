@@ -11,10 +11,7 @@ def get_secret():
         secret = base64.b64decode(response["SecretBinary"]).decode("utf-8")
 
     secret_dict = json.loads(secret)
-    for k, v in secret_dict.items():
-        print(f"{k}: {v}")
-
-    return secret_dict
+    print(secret_dict.get("slack-my-automation"))
 
 if __name__ == "__main__":
     get_secret()
